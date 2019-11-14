@@ -19,6 +19,13 @@ packages:
   original:
     hackage: membership-0
 - completed:
+    hackage: binary-instances-1@sha256:b17565598b8df3241f9b46fa8e3a3368ecc8e3f2eb175d7c28f319042a6f5c79,2613
+    pantry-tree:
+      size: 1035
+      sha256: 938ffc6990cac12681c657f7afa93737eecf335e6f0212d8c0b7c1ea3e0f40f4
+  original:
+    hackage: binary-instances-1
+- completed:
     size: 8280
     subdir: mix
     url: https://github.com/matsubara0507/mix.hs/archive/4978a33dec736799b30c14e215f7fa0f29fa2884.tar.gz
@@ -34,6 +41,36 @@ packages:
   original:
     subdir: mix
     url: https://github.com/matsubara0507/mix.hs/archive/4978a33dec736799b30c14e215f7fa0f29fa2884.tar.gz
+- completed:
+    size: 8280
+    subdir: mix-plugin-github
+    url: https://github.com/matsubara0507/mix.hs/archive/4978a33dec736799b30c14e215f7fa0f29fa2884.tar.gz
+    cabal-file:
+      size: 1086
+      sha256: 67b254b05a5c5cdee3ca3fb3c35f4acffff0eadb804244774802a958024c0ae2
+    name: mix-plugin-github
+    version: 0.1.2
+    sha256: 200ad779113f600d351be1e696d419f4332073dfbe76e5a666b82e17cb7e16d5
+    pantry-tree:
+      size: 386
+      sha256: dded091928378429aab079abc4dcdaf81284194a9938a163bd6a389412e11f1f
+  original:
+    subdir: mix-plugin-github
+    url: https://github.com/matsubara0507/mix.hs/archive/4978a33dec736799b30c14e215f7fa0f29fa2884.tar.gz
+- completed:
+    size: 93288
+    url: https://github.com/matsubara0507/github/archive/0e53921d2433c3e86b7231e6be7d234ae75c095f.tar.gz
+    cabal-file:
+      size: 6909
+      sha256: 13f09e904248a40dd173c08f2859d0dfda178a7c27f88df20b70a0d5a7614757
+    name: github
+    version: '0.22'
+    sha256: 7ec8fd5d7053204563d8f28ae4910eb8d40fa6f76b9d67b208905dd28ca9e71f
+    pantry-tree:
+      size: 15814
+      sha256: 3795c9a117b2db777a345c8b29ce4335cd7d35774cc584ad97171be349b59908
+  original:
+    url: https://github.com/matsubara0507/github/archive/0e53921d2433c3e86b7231e6be7d234ae75c095f.tar.gz
 snapshots:
 - completed:
     size: 523700

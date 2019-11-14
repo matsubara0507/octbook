@@ -4,10 +4,14 @@ packages:
 extra-deps:
 - extensible-0.6.1
 - membership-0
+- binary-instances-1
 - github: matsubara0507/mix.hs
   commit: 4978a33dec736799b30c14e215f7fa0f29fa2884
   subdirs:
   - mix
+  - mix-plugin-github
+- github: matsubara0507/github
+  commit: 0e53921d2433c3e86b7231e6be7d234ae75c095f
 
 docker:
   repo: matsubara0507/stack-build
