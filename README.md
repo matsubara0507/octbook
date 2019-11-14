@@ -1,5 +1,19 @@
 # octbook
 
+Invite GitHub Organizations or GitHub Organizations Team by config YAML:
+
+```yaml
+- id: matsubara0507
+  name: MATSUBARA Nobutada
+  org: IGGG
+  teams: []
+- id: octcat
+  name: Octcat
+  org: github
+  teams:
+  - developer
+```
+
 ## Requirement
 
 ## Usage
