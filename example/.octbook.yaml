@@ -1,0 +1,11 @@
+- id: matsubara0507
+  name: MATSUBARA Nobutada
+  org: sample-hige
+  teams:
+  - Sample
+- id: matoi-chan
+  name:
+  org: sample-hige
+  teams:
+  - Sample
+  - Bots

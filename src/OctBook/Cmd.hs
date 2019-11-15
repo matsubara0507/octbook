@@ -13,6 +13,7 @@ import           OctBook.Config                         (User)
 import           OctBook.Env
 
 inviteOrg :: [Text] -> RIO Env ()
+inviteOrg [] = mapM_ inviteUserToGitHubOrg =<< asks (view #config)
 inviteOrg userIDs = do
   users <- asks (view #config)
   forM_ userIDs $ \idx ->
@@ -24,7 +25,7 @@ inviteTeam :: [Text] -> [Text] -> RIO Env ()
 inviteTeam _ _ = showNotImpl
 
 showNotImpl :: MonadIO m => m ()
-showNotImpl = hPutBuilder stdout "not yet implement command."
+showNotImpl = hPutBuilder stdout "not yet implement command.\n"
 
 inviteUserToGitHubOrg :: User -> RIO Env ()
 inviteUserToGitHubOrg user = do

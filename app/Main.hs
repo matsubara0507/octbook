@@ -71,7 +71,7 @@ runCmd usage opts path =
   case opts ^. #invite of
     Just Org  -> run $ OctBook.inviteOrg (opts ^. #users)
     Just Team -> run $ OctBook.inviteTeam (opts ^. #users) (opts ^. #teams)
-    _         -> hPutBuilder stdout (fromString usage)
+    _         -> hPutBuilder stdout ("Please set invite option\n" <> fromString usage)
   where
     logOpts = #handle @= stdout <: #verbose @= (opts ^. #verbose) <: nil
     run act = do
