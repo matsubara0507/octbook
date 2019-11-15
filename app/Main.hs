@@ -26,19 +26,27 @@ main = withGetOpt' "[options] [input-file]" opts $ \r args usage -> do
     opts = #help    @= helpOpt
         <: #version @= versionOpt
         <: #verbose @= verboseOpt
-        <: #config  @= configOpt
         <: #users   @= usersOpt
         <: #teams   @= teamsOpt
+        <: #invite  @= inviteOpt
         <: nil
 
 type Options = Record
   '[ "help"    >: Bool
    , "version" >: Bool
    , "verbose" >: Bool
-   , "config"  >: Maybe FilePath
    , "users"   >: [Text]
    , "teams"   >: [Text]
+   , "invite"  >: Maybe Target
    ]
+
+data Target = Org | Team
+
+stringToTarget :: String -> Maybe Target
+stringToTarget "org"          = Just Org
+stringToTarget "organization" = Just Org
+stringToTarget "team"         = Just Team
+stringToTarget _              = Nothing
 
 helpOpt :: OptDescr' Bool
 helpOpt = optFlag ['h'] ["help"] "Show this help text"
@@ -49,26 +57,26 @@ versionOpt = optFlag [] ["version"] "Show version"
 verboseOpt :: OptDescr' Bool
 verboseOpt = optFlag ['v'] ["verbose"] "Enable verbose mode: verbosity level \"debug\""
 
-configOpt :: OptDescr' (Maybe FilePath)
-configOpt = optLastArg ['c'] ["config"] "PATH" "Configuration file path"
-
 usersOpt :: OptDescr' [Text]
-usersOpt = optionReqArg (pure . L.concatMap (T.split (== ',') . fromString)) [] ["users"] "IDS" "Filter users"
+usersOpt = optTextList [] ["users"] "IDS" "Filter users"
 
 teamsOpt :: OptDescr' [Text]
-teamsOpt = optionReqArg (pure . L.concatMap (T.split (== ',') . fromString)) [] ["teams"] "IDS" "Filter teams"
+teamsOpt = optTextList [] ["teams"] "IDS" "Filter teams"
+
+inviteOpt :: OptDescr' (Maybe Target)
+inviteOpt = (stringToTarget =<<) <$> optLastArg [] ["invite"] "(org|team)" "Invite user to GitHub Org or Team"
 
 runCmd :: String -> Options -> Maybe String -> IO ()
-runCmd usage opts subcmd =
-  case subcmd of
-    Just "invite-org"  -> run $ OctBook.inviteOrg (opts ^. #users)
-    Just "invite-team" -> run $ OctBook.inviteTeam (opts ^. #users) (opts ^. #teams)
-    _                  -> hPutBuilder stdout (fromString usage)
+runCmd usage opts path =
+  case opts ^. #invite of
+    Just Org  -> run $ OctBook.inviteOrg (opts ^. #users)
+    Just Team -> run $ OctBook.inviteTeam (opts ^. #users) (opts ^. #teams)
+    _         -> hPutBuilder stdout (fromString usage)
   where
     logOpts = #handle @= stdout <: #verbose @= (opts ^. #verbose) <: nil
     run act = do
       _ <- tryIO $ loadFile defaultConfig
-      config <- OctBook.readConfig (fromMaybe ".octbook.yaml" $ opts ^. #config)
+      config <- OctBook.readConfig (fromMaybe ".octbook.yaml" path)
       token  <- liftIO $ fromString <$> getEnv "GH_TOKEN"
       let plugin = hsequence
                  $ #config <@=> pure config
@@ -76,3 +84,6 @@ runCmd usage opts subcmd =
                 <: #logger <@=> MixLogger.buildPlugin logOpts
                 <: nil
       Mix.run plugin act
+
+optTextList :: [Char] -> [String] -> String -> String -> OptDescr' [Text]
+optTextList = optionReqArg (pure . L.concatMap (T.split (== ',') . fromString))
