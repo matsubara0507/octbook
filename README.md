@@ -16,9 +16,35 @@ Invite GitHub Organizations or GitHub Organizations Team by config YAML:
 
 ## Requirement
 
+Docker or Haskell Stack
+
 ## Usage
 
+```
+$ octbook --help
+octbook [options] [input-file]
+  -h  --help               Show this help text
+      --version            Show version
+  -v  --verbose            Enable verbose mode: verbosity level "debug"
+      --users=IDS          Filter users
+      --teams=IDS          Filter teams
+      --invite=(org|team)  Invite user to GitHub Org or Team
+```
+
+### Docker
+
+use [matsubara0507/octbook](https://hub.docker.com/r/matsubara0507/octbook)
+
+```
+$ docker run -v `pwd`:/work matsubara0507/octbook --help
+```
+
+
 ## Build
+
+```
+$ stack build
+```
 
 ### Docker
 
@@ -26,4 +52,10 @@ Invite GitHub Organizations or GitHub Organizations Team by config YAML:
 $ stack --docker build -j 1 Cabal # if out of memory in docker
 $ stack --docker --local-bin-path=./bin install
 $ docker build -t matsubara0507/octbook . --build-arg local_bin_path=./bin
+```
+
+or
+
+```
+$ make image tag=matsubara0507/octbook
 ```
