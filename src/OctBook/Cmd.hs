@@ -15,23 +15,22 @@ import           OctBook.Config                         (User)
 import           OctBook.Env
 
 inviteOrg :: [Text] -> RIO Env ()
-inviteOrg [] =
-  mapM_ inviteUserToGitHubOrg =<< asks (view #config)
-inviteOrg userIDs = do
-  users <- asks (view #config)
-  forM_ userIDs $ \idx ->
-    case L.find (\user -> user ^. #id == idx) users of
-      Just user -> inviteUserToGitHubOrg user
-      Nothing   -> logWarn (display $ "user not found: " <> idx)
+inviteOrg = actForUsers inviteUserToGitHubOrg
 
 inviteTeam :: [Text] -> [Text] -> RIO Env ()
-inviteTeam [] teamIDs =
-  mapM_ (inviteUserToGitHubOrgTeam teamIDs) =<< asks (view #config)
-inviteTeam userIDs teamIDs = do
+inviteTeam teamIDs = actForUsers (inviteUserToGitHubOrgTeam teamIDs)
+
+actForUsers :: (User -> RIO Env ()) -> [Text] -> RIO Env ()
+actForUsers act userIDs = do
   users <- asks (view #config)
+  if | null userIDs -> mapM_ act users
+     | otherwise    -> mapUsersWithFilterByIDs userIDs act users
+
+mapUsersWithFilterByIDs :: [Text] -> (User -> RIO Env ()) -> [User] -> RIO Env ()
+mapUsersWithFilterByIDs userIDs act users =
   forM_ userIDs $ \idx ->
     case L.find (\user -> user ^. #id == idx) users of
-      Just user -> inviteUserToGitHubOrgTeam teamIDs user
+      Just user -> act user
       Nothing   -> logWarn (display $ "user not found: " <> idx)
 
 inviteUserToGitHubOrg :: User -> RIO Env ()

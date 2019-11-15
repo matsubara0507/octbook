@@ -70,7 +70,7 @@ runCmd :: String -> Options -> Maybe String -> IO ()
 runCmd usage opts path =
   case opts ^. #invite of
     Just Org  -> run $ OctBook.inviteOrg (opts ^. #users)
-    Just Team -> run $ OctBook.inviteTeam (opts ^. #users) (opts ^. #teams)
+    Just Team -> run $ OctBook.inviteTeam (opts ^. #teams) (opts ^. #users)
     _         -> hPutBuilder stdout ("Please set invite option\n" <> fromString usage)
   where
     logOpts = #handle @= stdout <: #verbose @= (opts ^. #verbose) <: nil
