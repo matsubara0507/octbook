@@ -12,6 +12,8 @@ extra-deps:
   - mix-plugin-github
 - github: matsubara0507/github
   commit: 0e53921d2433c3e86b7231e6be7d234ae75c095f
+- github: matsubara0507/fallible
+  commit: dfbdce1a0b0c71bcfcea844c94f9cb815f071235
 
 docker:
   repo: matsubara0507/stack-build

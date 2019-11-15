@@ -71,6 +71,20 @@ packages:
       sha256: 3795c9a117b2db777a345c8b29ce4335cd7d35774cc584ad97171be349b59908
   original:
     url: https://github.com/matsubara0507/github/archive/0e53921d2433c3e86b7231e6be7d234ae75c095f.tar.gz
+- completed:
+    size: 5203
+    url: https://github.com/matsubara0507/fallible/archive/dfbdce1a0b0c71bcfcea844c94f9cb815f071235.tar.gz
+    cabal-file:
+      size: 1312
+      sha256: 0e0032c34120a43bf1d446172162b546e36441c38f620afb24e9d447ed7ce6b6
+    name: fallible
+    version: 0.1.0
+    sha256: 8f68bdcbf1326b0c3a3f87137ee6c7ff38d80ab1775222eb5def51d2a4718911
+    pantry-tree:
+      size: 572
+      sha256: 44ee246ef81562894b52cc3843150e98be75b03b53723173fe3f4ec8f48e0375
+  original:
+    url: https://github.com/matsubara0507/fallible/archive/dfbdce1a0b0c71bcfcea844c94f9cb815f071235.tar.gz
 snapshots:
 - completed:
     size: 523700
