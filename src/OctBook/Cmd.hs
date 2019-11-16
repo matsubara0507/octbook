@@ -39,16 +39,7 @@ inviteUserToGitHubOrg user = do
     (mkName Proxy $ user ^. #org)
     (mkName Proxy $ user ^. #id)
     False
-  case resp of
-    Left err -> logDebug (displayShow err) >> logWarn (display failure)
-    Right _  -> logInfo $ display success
-  where
-    failure = mconcat
-      [ "Fail: invite user: ", user ^. #id,  ", org: ", user ^. #org ]
-    success = mconcat
-      [ "Success: invite "
-      , user ^. #name, "(", user ^. #id, ")", " to ", user ^. #org, "."
-      ]
+  logAct "invite" ("to " <> user ^. #org) user resp
 
 inviteUserToGitHubOrgTeam :: [Text] -> User -> RIO Env ()
 inviteUserToGitHubOrgTeam teamIDs user =
@@ -56,23 +47,25 @@ inviteUserToGitHubOrgTeam teamIDs user =
     resp <- MixGitHub.fetch $ \auth -> GitHub.teamInfoByName' (Just auth)
       (mkName Proxy $ user ^. #org)
       (mkName Proxy teamId)
-    team <- resp ??= exit . logFail teamId
+    team <- resp ??= exit . logAct "invite" (target teamId) user . Left
     resp' <- MixGitHub.fetch $ \auth -> GitHub.addTeamMembershipFor' auth
       (GitHub.teamId team)
       (mkName Proxy $ user ^. #id)
       GitHub.RoleMember
-    lift $ case resp' of
-      Left err -> logFail teamId err
-      Right _  -> logInfo (display $ success teamId)
+    lift $ logAct "invite" (target teamId) user resp'
   where
     teamIDs' = if null teamIDs then user ^. #teams else teamIDs
-    logFail teamId err = logDebug (displayShow err) >> logWarn (display $ failure teamId)
-    failure teamId = mconcat
-      [ "Fail: invite user: ", user ^. #id
-      ,  ", org: ", user ^. #org, ", team: ", teamId
+    target teamId = "to " <> user ^. #org <> ":" <> teamId
+
+logAct :: Show e => Text -> Text -> User -> Either e a -> RIO Env ()
+logAct act target user = \case
+  Right _  -> logInfo (display successMessage)
+  Left err -> logDebug (displayShow err) >> logWarn (display failMessage)
+  where
+    successMessage = mconcat
+      [ "Success: ", act, " "
+      , user ^. #name, "(", user ^. #id, ")", " ", target, "."
       ]
-    success teamId = mconcat
-      [ "Success: invite "
-      , user ^. #name, "(", user ^. #id, ")"
-      , " to ", user ^. #org, ":", teamId, "."
+    failMessage = mconcat
+      [ "Fail: ", act, " ", user ^. #id, " ", target, "."
       ]
