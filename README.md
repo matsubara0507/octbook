@@ -29,6 +29,31 @@ octbook [options] [input-file]
       --users=IDS          Filter users
       --teams=IDS          Filter teams
       --invite=(org|team)  Invite user to GitHub Org or Team
+      --kick=(org|team)    Kick user from GitHub Org or Team
+```
+
+### Invite Organization
+
+```
+$ octbook --invite=org --users=matsubara0507 path/to/.octbook.yaml
+```
+
+### Kick Organization
+
+```
+$ octbook --kick=org --users=matsubara0507 path/to/.octbook.yaml
+```
+
+### Invite Organization Team
+
+```
+$ octbook --kick=team --users=matsubara0507 --teams=Sample path/to/.octbook.yaml
+```
+
+### Kick Organization Team
+
+```
+$ octbook --kick=team --users=matsubara0507 --teams=Sample path/to/.octbook.yaml
 ```
 
 ### Docker
@@ -38,7 +63,6 @@ use [matsubara0507/octbook](https://hub.docker.com/r/matsubara0507/octbook)
 ```
 $ docker run -v `pwd`:/work matsubara0507/octbook --help
 ```
-
 
 ## Build
 
