@@ -29,6 +29,7 @@ main = withGetOpt' "[options] [input-file]" opts $ \r args usage -> do
         <: #users   @= usersOpt
         <: #teams   @= teamsOpt
         <: #invite  @= inviteOpt
+        <: #kick    @= kickOpt
         <: nil
 
 type Options = Record
@@ -38,6 +39,7 @@ type Options = Record
    , "users"   >: [Text]
    , "teams"   >: [Text]
    , "invite"  >: Maybe Target
+   , "kick"    >: Maybe Target
    ]
 
 data Target = Org | Team
@@ -66,12 +68,17 @@ teamsOpt = optTextList [] ["teams"] "IDS" "Filter teams"
 inviteOpt :: OptDescr' (Maybe Target)
 inviteOpt = (stringToTarget =<<) <$> optLastArg [] ["invite"] "(org|team)" "Invite user to GitHub Org or Team"
 
+kickOpt :: OptDescr' (Maybe Target)
+kickOpt = (stringToTarget =<<) <$> optLastArg [] ["kick"] "(org|team)" "Kick user from GitHub Org or Team"
+
 runCmd :: String -> Options -> Maybe String -> IO ()
 runCmd usage opts path =
-  case opts ^. #invite of
-    Just Org  -> run $ OctBook.inviteOrg (opts ^. #users)
-    Just Team -> run $ OctBook.inviteTeam (opts ^. #teams) (opts ^. #users)
-    _         -> hPutBuilder stdout ("Please set invite option\n" <> fromString usage)
+  case (opts ^. #invite, opts ^. #kick) of
+    (Just Org, Nothing)  -> run $ OctBook.inviteOrg (opts ^. #users)
+    (Just Team, Nothing) -> run $ OctBook.inviteTeam (opts ^. #teams) (opts ^. #users)
+    (Nothing, Just Org)  -> run $ OctBook.kickOrg (opts ^. #users)
+    (Nothing, Just Team) -> run $ OctBook.kickTeam (opts ^. #teams) (opts ^. #users)
+    _                    -> hPutBuilder stdout ("Please set (invite|kick) option\n" <> fromString usage)
   where
     logOpts = #handle @= stdout <: #verbose @= (opts ^. #verbose) <: nil
     run act = do

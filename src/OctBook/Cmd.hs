@@ -1,6 +1,8 @@
 module OctBook.Cmd
   ( inviteOrg
+  , kickOrg
   , inviteTeam
+  , kickTeam
   ) where
 
 import           RIO
@@ -17,8 +19,14 @@ import           OctBook.Env
 inviteOrg :: [Text] -> RIO Env ()
 inviteOrg = actForUsers inviteUserToGitHubOrg
 
+kickOrg :: [Text] -> RIO Env ()
+kickOrg = actForUsers kickUserFromGitHubOrg
+
 inviteTeam :: [Text] -> [Text] -> RIO Env ()
 inviteTeam teamIDs = actForUsers (inviteUserToGitHubOrgTeam teamIDs)
+
+kickTeam :: [Text] -> [Text] -> RIO Env ()
+kickTeam teamIDs = actForUsers (kickUserFromGitHubOrgTeam teamIDs)
 
 actForUsers :: (User -> RIO Env ()) -> [Text] -> RIO Env ()
 actForUsers act userIDs = do
@@ -41,6 +49,13 @@ inviteUserToGitHubOrg user = do
     False
   logAct "invite" ("to " <> user ^. #org) user resp
 
+kickUserFromGitHubOrg :: User -> RIO Env ()
+kickUserFromGitHubOrg user = do
+  resp <- MixGitHub.fetch $ \auth -> GitHub.removeMembership' auth
+    (mkName Proxy $ user ^. #org)
+    (mkName Proxy $ user ^. #id)
+  logAct "kick" ("from " <> user ^. #org) user resp
+
 inviteUserToGitHubOrgTeam :: [Text] -> User -> RIO Env ()
 inviteUserToGitHubOrgTeam teamIDs user =
   forM_ (L.intersect teamIDs' $ user ^. #teams) $ \teamId -> evalContT $ do
@@ -56,6 +71,21 @@ inviteUserToGitHubOrgTeam teamIDs user =
   where
     teamIDs' = if null teamIDs then user ^. #teams else teamIDs
     target teamId = "to " <> user ^. #org <> ":" <> teamId
+
+kickUserFromGitHubOrgTeam :: [Text] -> User -> RIO Env ()
+kickUserFromGitHubOrgTeam teamIDs user =
+  forM_ (L.intersect teamIDs' $ user ^. #teams) $ \teamId -> evalContT $ do
+    resp <- MixGitHub.fetch $ \auth -> GitHub.teamInfoByName' (Just auth)
+      (mkName Proxy $ user ^. #org)
+      (mkName Proxy teamId)
+    team <- resp ??=  exit . logAct "kick" (target teamId) user . Left
+    resp' <- MixGitHub.fetch $ \auth -> GitHub.deleteTeamMembershipFor' auth
+      (GitHub.teamId team)
+      (mkName Proxy $ user ^. #id)
+    lift $ logAct "kick" (target teamId) user resp'
+  where
+    teamIDs' = if null teamIDs then user ^. #teams else teamIDs
+    target teamId = "from " <> user ^. #org <> ":" <> teamId
 
 logAct :: Show e => Text -> Text -> User -> Either e a -> RIO Env ()
 logAct act target user = \case
