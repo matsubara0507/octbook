@@ -51,3 +51,4 @@ jobs:
       run: |
         rm -rfd ~/.stack/programs
         rm -rfd ~/.stack/hackage
+        rm -rfd ~/.stack/snapshots
