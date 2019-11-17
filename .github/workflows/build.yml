@@ -20,12 +20,29 @@ jobs:
         fetch-depth: 1
 
     - name: Cache .stack
+      id: cache-stack
       uses: actions/cache@v1
       with:
         path: ~/.stack
         key: ${{ runner.os }}-stack-${{ hashFiles('**/stack.yaml.lock') }}
         restore-keys: |
           ${{ runner.os }}-stack-
+
+    - name: Cache .stack/pantry
+      id: cache-pantry
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack-temp
+        key: ${{ runner.os }}-pantry-${{ hashFiles('**/stack.yaml.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pantry-
+
+    - uses: matsubara0507/actions/move-files@master
+      with:
+        source_dir: ~/.stack-temp
+        source_files: |
+          pantry
+        target_dir: ~/.stack
 
     - uses: actions/setup-haskell@v1
       name: Setup Haskell
@@ -48,5 +65,3 @@ jobs:
     - name: Remove .stack/programs for cache
       run: |
         rm -rfd ~/.stack/programs
-        rm -rfd ~/.stack/hackage
-        rm -rfd ~/.stack/snapshots
