@@ -15,17 +15,17 @@ jobs:
         cabal: ["3.0"]
 
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v1
       with:
         fetch-depth: 1
 
-    - name: Cache .stack pantry
-      uses: actions/cache@v1
+    - name: Cache .stack
+      uses: actions/cache@master
       with:
-        path: ~/.stack/pantry
-        key: ${{ runner.os }}-stack-pantry-${{ hashFiles('**/stack.yaml.lock') }}
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-${{ hashFiles('**/stack.yaml.lock') }}
         restore-keys: |
-          ${{ runner.os }}-stack-pantry-
+          ${{ runner.os }}-stack-
 
     - uses: actions/setup-haskell@v1
       name: Setup Haskell
@@ -43,3 +43,6 @@ jobs:
 
     - name: Debug
       run: du -sh ~/.stack/*
+
+    - name: Remove .stack/programs for cache
+      run: rm -rfd ~/.stack/programs
