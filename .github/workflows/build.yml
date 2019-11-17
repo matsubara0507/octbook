@@ -37,6 +37,15 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pantry-
 
+    - name: Cache .stack-work
+      id: cache-work
+      uses: actions/cache@v1
+      with:
+        path: .stack-work
+        key: ${{ runner.os }}-local-stack-${{ hashFiles('**/stack.yaml.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-local-stack
+
     - uses: matsubara0507/actions/move-files@master
       with:
         source_dir: ~/.stack-temp
