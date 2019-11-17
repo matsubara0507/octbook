@@ -58,7 +58,7 @@ jobs:
     - name: Build binary
       run: stack --docker install --local-bin-path=./bin
 
-    - name: Debug
+    - name: Display .stack size
       run: |
         du -sh ~/.stack/*
 
