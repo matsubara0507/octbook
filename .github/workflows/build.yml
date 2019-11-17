@@ -44,8 +44,6 @@ jobs:
     - name: Debug
       run: |
         du -sh ~/.stack/*
-        ls -la ~/.stack/programs
-        ls -la ~/.stack/hackage
 
     - name: Remove .stack/programs for cache
       run: |
