@@ -70,6 +70,7 @@ jobs:
     - name: Display .stack size
       run: |
         du -sh ~/.stack/*
+        du -sh .stack-work
 
     - name: Remove .stack/programs for cache
       run: |
