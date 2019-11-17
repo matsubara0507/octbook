@@ -15,24 +15,21 @@ jobs:
       with:
         fetch-depth: 1
 
-    - name: Cache .stack
+    - name: Cache .stack pantry
       uses: actions/cache@v1
       with:
-        path: ~/.stack
-        key: ${{ matrix.ghc }}-stack-${{ hashFiles('**/stack.yaml.lock') }}
+        path: ~/.stack/pantry
+        key: ${{ runner.os }}-stack-pantry-${{ hashFiles('**/stack.yaml.lock') }}
         restore-keys: |
-          ${{ matrix.ghc }}-stack-
-
-    - uses: actions/setup-haskell@v1
-      name: Setup Haskell
-      with:
-        ghc-version: ${{ matrix.ghc }}
-        cabal-version: ${{ matrix.cabal }}
+          ${{ runner.os }}-stack-pantry-
 
     - uses: mstksg/setup-stack@v1
 
     - name: Install dependencies
-      run: stack --docker --system-ghc build --only-dependencies
+      run: stack --docker build --only-dependencies
 
     - name: Build binary
-      run: stack --docker --system-ghc install --local-bin-path=./bin
+      run: stack --docker install --local-bin-path=./bin
+
+    - name: Debug
+      run: du -sh ~/.stack/*
