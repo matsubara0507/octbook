@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  pull_request: null
+  push:
+    branches:
+    - master
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 1
+
+    - name: Cache .stack
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack
+        key: ${{ matrix.ghc }}-stack-${{ hashFiles('**/stack.yaml.lock') }}
+        restore-keys: |
+          ${{ matrix.ghc }}-stack-
+
+    - uses: actions/setup-haskell@v1
+      name: Setup Haskell
+      with:
+        ghc-version: ${{ matrix.ghc }}
+        cabal-version: ${{ matrix.cabal }}
+
+    - uses: mstksg/setup-stack@v1
+
+    - name: Install dependencies
+      run: stack --docker --system-ghc build --only-dependencies
+
+    - name: Build binary
+      run: stack --docker --system-ghc install --local-bin-path=./bin
