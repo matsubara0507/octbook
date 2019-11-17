@@ -9,6 +9,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        ghc: ["8.6.5"]
+        cabal: ["3.0"]
 
     steps:
     - uses: actions/checkout@master
@@ -22,6 +26,12 @@ jobs:
         key: ${{ runner.os }}-stack-pantry-${{ hashFiles('**/stack.yaml.lock') }}
         restore-keys: |
           ${{ runner.os }}-stack-pantry-
+
+    - uses: actions/setup-haskell@v1
+      name: Setup Haskell
+      with:
+        ghc-version: ${{ matrix.ghc }}
+        cabal-version: ${{ matrix.cabal }}
 
     - uses: mstksg/setup-stack@v1
 
