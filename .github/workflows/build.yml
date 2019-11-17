@@ -42,7 +42,12 @@ jobs:
       run: stack --docker install --local-bin-path=./bin
 
     - name: Debug
-      run: du -sh ~/.stack/*
+      run: |
+        du -sh ~/.stack/*
+        ls -la ~/.stack/programs
+        ls -la ~/.stack/hackage
 
     - name: Remove .stack/programs for cache
-      run: rm -rfd ~/.stack/programs
+      run: |
+        rm -rfd ~/.stack/programs
+        rm -rfd ~/.stack/hackage
