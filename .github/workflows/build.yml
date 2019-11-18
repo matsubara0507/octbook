@@ -74,7 +74,6 @@ jobs:
     - name: Display before .stack size
       run: |
         du -sh ~/.stack/*
-        du -sh ~/.stack/programs/*
         du -sh .stack-work/*
 
     - uses: actions/setup-haskell@v1
