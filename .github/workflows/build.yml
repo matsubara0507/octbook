@@ -85,10 +85,10 @@ jobs:
     - uses: mstksg/setup-stack@v1
 
     - name: Install dependencies
-      run: stack --docker build --only-dependencies
+      run: stack --system-ghc build --only-dependencies
 
     - name: Build binary
-      run: stack --docker install --local-bin-path=./bin
+      run: stack --system-ghc install --local-bin-path=./bin
 
     - name: Display after .stack size
       run: |
