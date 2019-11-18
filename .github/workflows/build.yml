@@ -38,14 +38,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pantry-
 
-    - name: Cache .stack/programs
-      id: cache-programs
+    - name: Cache .stack/**/ghc
+      id: cache-ghc
       uses: actions/cache@v1
       with:
-        path: ~/.stack-temp/programs
-        key: ${{ runner.os }}-programs-${{ hashFiles('**/stack.yaml.lock') }}-${{ matrix.cache-version }}
+        path: ~/.stack-temp/ghc
+        key: ${{ runner.os }}-ghc-${{ hashFiles('**/stack.yaml.lock') }}-${{ matrix.cache-version }}
         restore-keys: |
-          ${{ runner.os }}-programs-
+          ${{ runner.os }}-ghc-
 
     - name: Cache .stack-work
       id: cache-work
@@ -64,13 +64,13 @@ jobs:
           pantry
         target_dir: ~/.stack
 
-    - name: Move .stack/programs to temp
+    - name: Move .stack/**/ghc to temp
       uses: matsubara0507/actions/move-files@master
       with:
-        source_dir: ~/.stack-temp/programs
+        source_dir: ~/.stack-temp/ghc
         source_files: |
-          programs
-        target_dir: ~/.stack
+          ghc-${{ matrix.ghc }}
+        target_dir: ~/.stack/programs/programs/x86_64-linux
 
     - uses: actions/setup-haskell@v1
       name: Setup Haskell
