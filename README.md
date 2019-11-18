@@ -60,10 +60,10 @@ $ octbook --kick=team --users=matsubara0507 --teams=Sample path/to/.octbook.yaml
 
 ### Docker
 
-use [matsubara0507/octbook](https://hub.docker.com/r/matsubara0507/octbook)
+use [matsubara0507/octbook](https://github.com/matsubara0507/octbook/packages)
 
 ```
-$ docker run -v `pwd`:/work matsubara0507/octbook --help
+$ docker run -v `pwd`:/work docker.pkg.github.com/matsubara0507/octbook/cli --help
 ```
 
 ## Build
