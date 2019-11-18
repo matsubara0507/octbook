@@ -71,14 +71,6 @@ jobs:
           programs
         target_dir: ~/.stack
 
-    - name: Display before .stack size
-      run: |
-        mkdir -p ~/.stack/programs/x86_64-linux
-        mkdir -p .stack-work
-        du -sh ~/.stack/*
-        du -sh ~/.stack/programs/x86_64-linux/*
-        du -sh .stack-work/*
-
     - uses: actions/setup-haskell@v1
       name: Setup Haskell
       with:
@@ -93,7 +85,7 @@ jobs:
     - name: Build binary
       run: stack install --local-bin-path=./bin
 
-    - name: Display after .stack size
+    - name: Display .stack size
       run: |
         du -sh ~/.stack/*
         du -sh ~/.stack/programs/x86_64-linux/*
