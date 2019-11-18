@@ -32,10 +32,19 @@ jobs:
       id: cache-pantry
       uses: actions/cache@v1
       with:
-        path: ~/.stack-temp
+        path: ~/.stack-temp/pantry
         key: ${{ runner.os }}-pantry-${{ hashFiles('**/stack.yaml.lock') }}
         restore-keys: |
           ${{ runner.os }}-pantry-
+
+    - name: Cache .stack/programs
+      id: cache-programs
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack-temp/programs
+        key: ${{ runner.os }}-programs-${{ hashFiles('**/stack.yaml.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-programs-
 
     - name: Cache .stack-work
       id: cache-work
@@ -46,12 +55,26 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-local-stack
 
-    - uses: matsubara0507/actions/move-files@master
+    - name: Move .stack/pantry to temp
+      uses: matsubara0507/actions/move-files@master
       with:
-        source_dir: ~/.stack-temp
+        source_dir: ~/.stack-temp/pantry
         source_files: |
           pantry
         target_dir: ~/.stack
+
+    - name: Move .stack/programs to temp
+      uses: matsubara0507/actions/move-files@master
+      with:
+        source_dir: ~/.stack-temp/programs
+        source_files: |
+          programs
+        target_dir: ~/.stack
+
+    - name: Display before .stack size
+      run: |
+        du -sh ~/.stack/*
+        du -sh .stack-work
 
     - uses: actions/setup-haskell@v1
       name: Setup Haskell
@@ -67,11 +90,7 @@ jobs:
     - name: Build binary
       run: stack --docker install --local-bin-path=./bin
 
-    - name: Display .stack size
+    - name: Display after .stack size
       run: |
         du -sh ~/.stack/*
         du -sh .stack-work
-
-    - name: Remove .stack/programs for cache
-      run: |
-        rm -rfd ~/.stack/programs
