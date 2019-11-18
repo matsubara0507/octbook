@@ -89,7 +89,6 @@ jobs:
     - name: Display .stack size
       run: |
         du -sh ~/.stack/*
-        du -sh ~/.stack/programs/x86_64-linux/*
         du -sh .stack-work/*
 
     # - name: Remove GHC
