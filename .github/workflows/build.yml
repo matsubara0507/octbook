@@ -73,7 +73,10 @@ jobs:
 
     - name: Display before .stack size
       run: |
+        mkdir -p ~/.stack/programs/x86_64-linux
+        mkdir -p .stack-work
         du -sh ~/.stack/*
+        du -sh ~/.stack/programs/x86_64-linux/*
         du -sh .stack-work/*
 
     - uses: actions/setup-haskell@v1
@@ -93,5 +96,5 @@ jobs:
     - name: Display after .stack size
       run: |
         du -sh ~/.stack/*
-        du -sh ~/.stack/programs/*
+        du -sh ~/.stack/programs/x86_64-linux/*
         du -sh .stack-work/*
