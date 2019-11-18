@@ -13,7 +13,7 @@ jobs:
       matrix:
         ghc: ["8.6.5"]
         cabal: ["3.0"]
-        cache-version: ["v3"]
+        cache-version: ["v4"]
 
     steps:
     - uses: actions/checkout@v1
@@ -81,10 +81,10 @@ jobs:
     - uses: mstksg/setup-stack@v1
 
     - name: Install dependencies
-      run: stack build --only-dependencies
+      run: stack --system-ghc build --only-dependencies
 
     - name: Build binary
-      run: stack install --local-bin-path=./bin
+      run: stack --system-ghc install --local-bin-path=./bin
 
     - name: Display .stack size
       run: |
@@ -92,5 +92,5 @@ jobs:
         du -sh ~/.stack/programs/x86_64-linux/*
         du -sh .stack-work/*
 
-    - name: Remove GHC
-      run: rm -rfd ~/.stack/programs
+    # - name: Remove GHC
+    #   run: rm -rfd ~/.stack/programs
