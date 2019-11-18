@@ -13,6 +13,7 @@ jobs:
       matrix:
         ghc: ["8.6.5"]
         cabal: ["3.0"]
+        cache-version: ["v1"]
 
     steps:
     - uses: actions/checkout@v1
@@ -24,7 +25,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-stack-${{ hashFiles('**/stack.yaml.lock') }}
+        key: ${{ runner.os }}-stack-${{ hashFiles('**/stack.yaml.lock') }}-${{ matrix.cache-version }}
         restore-keys: |
           ${{ runner.os }}-stack-
 
@@ -33,7 +34,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.stack-temp/pantry
-        key: ${{ runner.os }}-pantry-${{ hashFiles('**/stack.yaml.lock') }}
+        key: ${{ runner.os }}-pantry-${{ hashFiles('**/stack.yaml.lock') }}-${{ matrix.cache-version }}
         restore-keys: |
           ${{ runner.os }}-pantry-
 
@@ -42,7 +43,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.stack-temp/programs
-        key: ${{ runner.os }}-programs-${{ hashFiles('**/stack.yaml.lock') }}
+        key: ${{ runner.os }}-programs-${{ hashFiles('**/stack.yaml.lock') }}-${{ matrix.cache-version }}
         restore-keys: |
           ${{ runner.os }}-programs-
 
