@@ -74,7 +74,8 @@ jobs:
     - name: Display before .stack size
       run: |
         du -sh ~/.stack/*
-        du -sh .stack-work
+        du -sh ~/.stack/programs/*
+        du -sh .stack-work/*
 
     - uses: actions/setup-haskell@v1
       name: Setup Haskell
@@ -85,12 +86,13 @@ jobs:
     - uses: mstksg/setup-stack@v1
 
     - name: Install dependencies
-      run: stack --system-ghc build --only-dependencies
+      run: stack build --only-dependencies
 
     - name: Build binary
-      run: stack --system-ghc install --local-bin-path=./bin
+      run: stack install --local-bin-path=./bin
 
     - name: Display after .stack size
       run: |
         du -sh ~/.stack/*
-        du -sh .stack-work
+        du -sh ~/.stack/programs/*
+        du -sh .stack-work/*
