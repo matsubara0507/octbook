@@ -1,5 +1,7 @@
 # octbook
 
+![](https://github.com/matsubara0507/octbook/workflows/Build/badge.svg)
+
 Invite GitHub Organizations or GitHub Organizations Team by config YAML:
 
 ```yaml
